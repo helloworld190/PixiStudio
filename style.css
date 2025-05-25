@@ -1,0 +1,306 @@
+/* :root variables as before */
+:root {
+    --bg-color: #1e1e1e;
+    --sidebar-bg: #252526;
+    --toolbar-bg: #333333;
+    --text-color: #cccccc;
+    --accent-color: #007acc;
+    --border-color: #3c3c3c;
+    --input-bg: #3c3c3c;
+    --input-border: #555555;
+}
+
+body, html {
+    margin: 0;
+    padding: 0;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    background-color: var(--bg-color);
+    color: var(--text-color);
+    overflow: hidden;
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
+    -webkit-tap-highlight-color: transparent; /* Disable tap highlight on mobile */
+}
+
+.app-container {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    position: relative; /* For absolute positioning of toggle buttons */
+}
+
+.top-bar {
+    background-color: var(--toolbar-bg);
+    padding: 0 10px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-bottom: 1px solid var(--border-color);
+    height: 35px; /* Fixed height */
+    flex-shrink: 0;
+    z-index: 10; /* Keep top bar above panels */
+}
+
+.menu-bar button.menu-button { /* Target specific buttons */
+    background: none;
+    border: none;
+    color: var(--text-color);
+    padding: 5px 8px; /* Adjust padding */
+    cursor: pointer;
+    font-size: 0.9em;
+    border-radius: 3px;
+}
+.menu-bar button.menu-button:hover {
+    background-color: var(--accent-color);
+}
+.dropdown-content {
+    display: none;
+    position: absolute;
+    background-color: var(--sidebar-bg);
+    min-width: 160px;
+    box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+    z-index: 100;
+    border: 1px solid var(--border-color);
+    border-radius: 3px;
+}
+.dropdown-content a {
+    color: var(--text-color);
+    padding: 8px 12px;
+    text-decoration: none;
+    display: block;
+    font-size: 0.9em;
+}
+.dropdown-content a:hover, .dropdown-content a.active-symmetry {
+    background-color: var(--accent-color);
+}
+.menu-bar > div {
+    position: relative;
+    display: inline-block;
+}
+
+.app-title {
+    font-weight: bold;
+    font-size: 1em;
+    white-space: nowrap;
+}
+
+.main-content {
+    display: flex;
+    flex-grow: 1;
+    overflow: hidden;
+    position: relative; /* For positioning mobile toggles */
+}
+
+.toolbar {
+    background-color: var(--sidebar-bg);
+    padding: 10px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    border-right: 1px solid var(--border-color);
+    width: 50px;
+    flex-shrink: 0;
+    transition: margin-left 0.3s ease-in-out; /* For mobile toggle */
+    z-index: 5;
+}
+
+.tool-btn {
+    background: none;
+    border: 1px solid transparent;
+    color: var(--text-color);
+    padding: 8px;
+    margin-bottom: 8px;
+    cursor: pointer;
+    font-size: 1.2em;
+    width: 100%;
+    border-radius: 3px;
+}
+.tool-btn:hover {
+    background-color: var(--accent-color);
+    border-color: var(--accent-color);
+}
+.tool-btn.active {
+    background-color: var(--accent-color);
+    border-color: var(--accent-color);
+    box-shadow: 0 0 5px var(--accent-color);
+}
+.toolbar hr {
+    border: 0;
+    height: 1px;
+    background-color: var(--border-color);
+    width: 80%;
+    margin: 10px 0;
+}
+
+.canvas-area {
+    flex-grow: 1;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: var(--bg-color);
+    overflow: auto;
+    padding: 10px; /* Reduced padding for mobile */
+    position: relative; /* For drawing elements like symmetry lines */
+}
+
+#drawingCanvas {
+    border: 1px dashed var(--border-color);
+    background-color: #FFFFFF; /* Default canvas background */
+    box-shadow: 0 0 10px rgba(0,0,0,0.5);
+    cursor: crosshair;
+    touch-action: none; /* Prevent default touch actions like scrolling/zooming on canvas */
+}
+
+.options-panel {
+    background-color: var(--sidebar-bg);
+    padding: 15px;
+    width: 250px;
+    flex-shrink: 0;
+    border-left: 1px solid var(--border-color);
+    overflow-y: auto;
+    transition: margin-right 0.3s ease-in-out; /* For mobile toggle */
+    z-index: 5;
+}
+.options-panel h4, .options-panel h5 {
+    margin-top: 0;
+    margin-bottom: 10px;
+    border-bottom: 1px solid var(--border-color);
+    padding-bottom: 5px;
+}
+.option-group { margin-bottom: 15px; }
+.option-group label { display: block; margin-bottom: 5px; font-size: 0.9em; }
+.option-group input[type="range"],
+.option-group input[type="number"],
+.option-group input[type="color"],
+.option-group select,
+.option-group input[type="checkbox"] {
+    width: calc(100% - 10px);
+    padding: 5px;
+    background-color: var(--input-bg);
+    border: 1px solid var(--input-border);
+    color: var(--text-color);
+    border-radius: 3px;
+    box-sizing: border-box;
+}
+.option-group input[type="checkbox"] {
+    width: auto;
+    margin-right: 5px;
+    vertical-align: middle;
+}
+.option-group input[type="color"] { padding: 2px; height: 30px; }
+.option-group span { font-size: 0.8em; }
+.options-panel button {
+    background-color: var(--accent-color);
+    border: none;
+    color: white;
+    padding: 8px 12px;
+    cursor: pointer;
+    border-radius: 3px;
+    width: 100%;
+    margin-top: 5px;
+    font-size: 0.9em;
+}
+.options-panel button:hover { opacity: 0.9; }
+.tool-specific-options {
+    margin-top: 15px;
+    padding-top: 10px;
+    border-top: 1px dashed var(--border-color);
+}
+.tool-specific-options span { /* For pixel brush info text */
+    font-size: 0.8em;
+    color: #aaa;
+}
+
+.status-bar {
+    background-color: var(--toolbar-bg);
+    padding: 5px 10px;
+    font-size: 0.8em;
+    display: flex;
+    justify-content: space-between;
+    flex-wrap: wrap; /* Allow wrapping on small screens */
+    border-top: 1px solid var(--border-color);
+    height: auto; min-height: 20px; /* Adjust height */
+    flex-shrink: 0;
+}
+.status-bar span { margin-right: 15px; line-height: 1.5; }
+
+
+.eyedropper-cursor { /* As before */
+    cursor: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"><path fill="white" stroke="black" stroke-width="1" d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8zm-1-13h2v5h-2zm0 7h2v2h-2z"/><circle cx="12" cy="12" r="3" fill="transparent" stroke="red" stroke-width="1.5"/></svg>') 12 12, crosshair !important;
+}
+
+/* Mobile Toggle Buttons */
+.mobile-toggle-btn {
+    display: none; /* Hidden by default */
+    position: fixed; /* Fixed position relative to viewport */
+    top: 45px; /* Below top bar */
+    background-color: var(--accent-color);
+    color: white;
+    border: none;
+    padding: 8px 10px;
+    font-size: 1.1em;
+    cursor: pointer;
+    z-index: 20; /* Above panels */
+    border-radius: 0 3px 3px 0;
+}
+.mobile-toggle-btn.left-toggle {
+    left: 0;
+}
+.mobile-toggle-btn.right-toggle {
+    right: 0;
+    border-radius: 3px 0 0 3px;
+}
+
+/* Symmetry Axis Line Styling (drawn on canvas, but can have helper styles) */
+.symmetry-line-overlay {
+    position: absolute;
+    top: 0; left: 0;
+    width: 100%; height: 100%;
+    pointer-events: none; /* Don't interfere with drawing */
+    z-index: 1; /* Behind potential brush cursor preview, but above canvas content conceptually */
+}
+
+
+/* Mobile Responsiveness (example breakpoint) */
+@media (max-width: 768px) {
+    .toolbar {
+        position: fixed; /* Take out of flow */
+        left: -60px; /* Start hidden */
+        height: calc(100vh - 35px - 25px); /* Full height minus top/status bar */
+        top: 35px; /* Below top bar */
+        margin-left: 0;
+        border-right: 1px solid var(--border-color);
+    }
+    .toolbar.open {
+        left: 0;
+    }
+
+    .options-panel {
+        position: fixed;
+        right: -260px; /* Start hidden */
+        height: calc(100vh - 35px - 25px);
+        top: 35px;
+        margin-right: 0;
+        border-left: 1px solid var(--border-color);
+    }
+    .options-panel.open {
+        right: 0;
+    }
+
+    .mobile-toggle-btn {
+        display: block;
+    }
+
+    .app-title {
+        font-size: 0.9em; /* Slightly smaller title */
+    }
+    .menu-bar button.menu-button {
+        padding: 5px;
+        font-size: 0.8em;
+    }
+    .status-bar span {
+        margin-right: 10px;
+        font-size: 0.75em;
+    }
+}
