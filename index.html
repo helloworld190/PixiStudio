@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+    <title>PixelCraft Studio Enhanced</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+    <div class="app-container">
+        <div class="top-bar">
+            <div class="menu-bar">
+                <button id="btnFile" class="menu-button">File <i class="fas fa-caret-down"></i></button>
+                <div class="dropdown-content" id="fileMenu">
+                    <a href="#" id="newCanvas">New</a>
+                    <a href="#" id="saveCanvas">Save as PNG</a>
+                    <a href="#" id="loadCanvas">Load Image</a>
+                </div>
+                <button id="btnEdit" class="menu-button">Edit <i class="fas fa-caret-down"></i></button>
+                 <div class="dropdown-content" id="editMenu">
+                    <a href="#" id="undo">Undo (Ctrl+Z)</a>
+                    <a href="#" id="redo">Redo (Ctrl+Y)</a>
+                    <a href="#" id="clearCanvas">Clear Canvas</a>
+                </div>
+                <button id="btnView" class="menu-button">View <i class="fas fa-caret-down"></i></button>
+                <div class="dropdown-content" id="viewMenu">
+                    <a href="#" id="toggleGrid">Toggle Grid</a>
+                    <a href="#" id="zoomIn">Zoom In (+)</a>
+                    <a href="#" id="zoomOut">Zoom Out (-)</a>
+                    <a href="#" id="resetZoom">Reset Zoom</a>
+                </div>
+                <button id="btnSymmetry" class="menu-button">Symmetry <i class="fas fa-caret-down"></i></button>
+                <div class="dropdown-content" id="symmetryMenu">
+                    <a href="#" class="symmetry-option" data-symmetry="none">None</a>
+                    <a href="#" class="symmetry-option" data-symmetry="horizontal">Horizontal</a>
+                    <a href="#" class="symmetry-option" data-symmetry="vertical">Vertical</a>
+                    <!-- <a href="#" class="symmetry-option" data-symmetry="radial">Radial (Soon)</a> -->
+                </div>
+            </div>
+            <div class="app-title">PixelCraft Studio Enhanced</div>
+        </div>
+
+        <div class="main-content">
+            <div class="toolbar" id="toolbar">
+                <!-- Drawing Tools -->
+                <button class="tool-btn active" data-tool="pencil" title="Pencil"><i class="fas fa-pencil-alt"></i></button>
+                <button class="tool-btn" data-tool="inkpencil" title="Ink Pencil"><i class="fas fa-pen-nib"></i></button>
+                <button class="tool-btn" data-tool="paintbrush" title="Paintbrush"><i class="fas fa-paint-brush"></i></button>
+                <button class="tool-btn" data-tool="pixelbrush" title="Pixel Brush (Zoom for precision)"><i class="fas fa-th-large"></i></button>
+                <button class="tool-btn" data-tool="eraser" title="Eraser"><i class="fas fa-eraser"></i></button>
+                <button class="tool-btn" data-tool="faderaser" title="Fade Eraser"><i class="fas fa-eraser" style="opacity:0.5;"></i></button>
+                <button class="tool-btn" data-tool="fogpencil" title="Fog/Airbrush"><i class="fas fa-spray-can"></i></button>
+                <hr>
+                <!-- Shape Tools -->
+                <button class="tool-btn" data-tool="line" title="Line Tool"><i class="fas fa-minus"></i></button>
+                <button class="tool-btn" data-tool="rectangle" title="Rectangle Tool"><i class="far fa-square"></i></button>
+                <button class="tool-btn" data-tool="circle" title="Circle Tool"><i class="far fa-circle"></i></button>
+                <hr>
+                <!-- Advanced Tools -->
+                <button class="tool-btn" data-tool="gradient" title="Gradient Tool"><i class="fas fa-palette"></i></button>
+                <hr>
+                <!-- Utility Tools -->
+                <button class="tool-btn" data-tool="eyedropper" title="Eyedropper"><i class="fas fa-eye-dropper"></i></button>
+                <button class="tool-btn" data-tool="text" title="Text Tool"><i class="fas fa-font"></i></button>
+                <button class="tool-btn" data-tool="fill" title="Fill Bucket"><i class="fas fa-fill-drip"></i></button>
+                <input type="file" id="loadImageFile" accept="image/*" style="display: none;">
+            </div>
+            <button id="toggleToolbarBtn" class="mobile-toggle-btn left-toggle"><i class="fas fa-bars"></i></button>
+
+
+            <div class="canvas-area">
+                <canvas id="drawingCanvas"></canvas>
+            </div>
+
+            <div class="options-panel" id="optionsPanel">
+                <button id="toggleOptionsBtn" class="mobile-toggle-btn right-toggle"><i class="fas fa-sliders-h"></i></button>
+                <h4>Tool Options</h4>
+                <div class="option-group">
+                    <label for="brushSize">Size:</label>
+                    <input type="range" id="brushSize" min="1" max="100" value="5">
+                    <span id="brushSizeValue">5</span>px
+                </div>
+                <div class="option-group">
+                    <label for="primaryColor">Primary Color:</label>
+                    <input type="color" id="primaryColor" value="#FFFFFF">
+                </div>
+                <div class="option-group" id="secondaryColorOption" style="display:none;">
+                    <label for="secondaryColor">Secondary Color (Gradient):</label>
+                    <input type="color" id="secondaryColor" value="#000000">
+                </div>
+                <div class="option-group">
+                    <label for="brushOpacity">Opacity:</label>
+                    <input type="range" id="brushOpacity" min="0.05" max="1" step="0.05" value="1">
+                    <span id="brushOpacityValue">1.0</span>
+                </div>
+
+                <!-- Tool Specific Options Container -->
+                <div id="toolSpecificOptionsContainer">
+                    <div id="pencilOptions" class="tool-specific-options" style="display:none;">
+                        <h5>Pencil Config:</h5>
+                        <label for="pencilHardness">Hardness:</label>
+                        <input type="range" id="pencilHardness" min="0.1" max="1" step="0.05" value="1">
+                        <span id="pencilHardnessValue">1.0</span>
+                    </div>
+                    <div id="paintbrushOptions" class="tool-specific-options" style="display:none;">
+                        <h5>Paintbrush Config:</h5>
+                        <label for="paintType">Type:</label>
+                        <select id="paintType">
+                            <option value="stark">Stark</option>
+                            <option value="water">Water</option>
+                            <option value="oil">Oil (Thick)</option>
+                        </select>
+                    </div>
+                     <div id="pixelBrushOptions" class="tool-specific-options" style="display:none;">
+                        <h5>Pixel Brush Config:</h5>
+                        <span>Brush Size affects pixel grid size.</span>
+                    </div>
+                    <div id="shapeOptions" class="tool-specific-options" style="display:none;">
+                        <h5>Shape Config:</h5>
+                        <label for="shapeFill">Fill Shape:</label>
+                        <input type="checkbox" id="shapeFill">
+                        <div class="option-group" id="shapeStrokeOption">
+                            <label for="shapeStrokeWidth">Stroke Width:</label>
+                            <input type="range" id="shapeStrokeWidth" min="1" max="50" value="2">
+                            <span id="shapeStrokeWidthValue">2</span>px
+                        </div>
+                    </div>
+                    <div id="gradientOptions" class="tool-specific-options" style="display:none;">
+                        <h5>Gradient Config:</h5>
+                        <label for="gradientType">Type:</label>
+                        <select id="gradientType">
+                            <option value="linear">Linear</option>
+                            <option value="radial" disabled>Radial (Soon)</option>
+                        </select>
+                        <!-- Add angle for linear later -->
+                    </div>
+                </div>
+                
+                <hr>
+                <h4>Canvas Config</h4>
+                <div class="option-group">
+                    <label for="canvasWidth">Width:</label>
+                    <input type="number" id="canvasWidth" value="800" min="50">
+                </div>
+                <div class="option-group">
+                    <label for="canvasHeight">Height:</label>
+                    <input type="number" id="canvasHeight" value="600" min="50">
+                </div>
+                <div class="option-group">
+                    <label for="canvasBgColor">BG Color:</label>
+                    <input type="color" id="canvasBgColor" value="#222222">
+                </div>
+                <button id="applyCanvasConfig">Apply Config</button>
+                <button id="resetCanvasConfig">Reset to Default</button>
+            </div>
+        </div>
+
+        <div class="status-bar">
+            <span id="coords">X: 0, Y: 0</span>
+            <span id="zoomLevel">Zoom: 100%</span>
+            <span id="currentToolStatus">Tool: Pencil</span>
+            <span id="symmetryStatus">Symmetry: None</span>
+        </div>
+    </div>
+
+    <!-- Helper JS files FIRST -->
+    <script src="mobile_ui.js"></script>
+    <script src="tool_options_manager.js"></script>
+    <script src="new_tools_brushes.js"></script>
+    <script src="symmetry_handler.js"></script>
+    <!-- Main script LAST -->
+    <script src="script.js"></script>
+</body>
+</html>
